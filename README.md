@@ -10,3 +10,8 @@ py nombre.py | ejecutar archivos python
 
 docker
 variables de entorno, variables criticas del sistema
+
+comandos de git
+git init
+git add .
+git commit -m "nombre el commmit"
