@@ -1,6 +1,32 @@
- body {
+ /* body {
       background-color: navajowhite;
-    }
+    } */
+     /* Resetear estilos */
+     *{
+      margin: 0;
+      padding: 0;
+     }
+     header{
+      background-color: #007acc;
+      color: white;
+      padding: 20px;
+      text-align: center;
+     }
+     nav ul{
+
+      display: flex;
+      list-style: none;
+      justify-content: center; 
+      margin-top: 10px;
+     }
+     nav ul li{
+      margin: 0 15px;
+     }
+     nav ul li a{ 
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      }
     h1 {
       color: blue;
     }
@@ -9,4 +35,7 @@
     }
     h3 {
       color: orange;
+    }
+    h4 {
+      color: purple;
     }
