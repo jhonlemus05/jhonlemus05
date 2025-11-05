@@ -15,3 +15,10 @@ variables de entorno, variables criticas del sistema
 Comando | Descripción
 -|-
 pip list | lista 
+
+Set-ExecutionPolicy Unrestricted
+
+```
+print("Hola Mundo")
+
+```
