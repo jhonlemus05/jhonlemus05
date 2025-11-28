@@ -1,53 +1,113 @@
-# Frontend - Asistente Turístico Colombia 🇨🇴
+# Backend - Asistente Turístico Colombia 🇨🇴
 
-Este es el frontend para la aplicación de Asistente Turístico. Es una aplicación web moderna construida con **React**, **TypeScript** y **Vite**, diseñada para ofrecer una experiencia de usuario fluida y atractiva.
+Este es el backend para la aplicación de Asistente Turístico. Está construido con **Python** y **Flask**, y utiliza la inteligencia artificial de **Google Gemini** para proporcionar recomendaciones turísticas personalizadas.
 
 ## 🚀 Características
 
-*   **Interfaz de Chat**: Comunicación en tiempo real con el asistente turístico.
-*   **Botones de Mapas**: Genera automáticamente botones para buscar lugares recomendados en Google Maps.
-*   **Diseño Responsivo**: Funciona perfectamente en móviles y escritorio.
-*   **Estilos Modernos**: Utiliza Tailwind CSS (o CSS personalizado) para una apariencia premium.
+*   **API REST**: Proporciona un endpoint `/api/chat` para interactuar con el chatbot.
+*   **Google Gemini**: Utiliza el modelo `gemini-2.5-flash` para generar respuestas naturales y útiles.
+*   **Respuestas Estructuradas**: Devuelve las respuestas en formato JSON, separando el texto conversacional de la lista de lugares recomendados.
+*   **CORS**: Configurado para permitir peticiones desde el frontend.
+*   **Producción**: Listo para despliegue con `gunicorn`.
+
+## 📂 Estructura del Proyecto
+
+```text
+backend/
+├── chatbot/             # Lógica del chatbot (si aplica)
+├── static/              # Archivos estáticos
+├── templates/           # Plantillas HTML (si aplica)
+├── .env                 # Variables de entorno (API Keys)
+├── main.py              # Punto de entrada de la aplicación Flask
+├── requirements.txt     # Dependencias del proyecto
+└── README.md            # Documentación
+```
 
 ## 🛠️ Instalación y Configuración
 
 1.  **Clonar el repositorio** (si no lo has hecho):
     ```bash
     git clone <tu-repo>
-    cd frontend
+    cd backend
     ```
 
-2.  **Instalar dependencias**:
+2.  **Crear un entorno virtual** (opcional pero recomendado):
     ```bash
-    npm install
+    python -m venv venv
+    source venv/bin/activate  # En Windows: venv\Scripts\activate
     ```
 
-3.  **Variables de Entorno**:
-    Crea un archivo `.env` en la raíz de la carpeta `frontend` (para desarrollo local) o configura las variables en tu plataforma de despliegue.
-    ```env
-    VITE_BACKEND_URL=http://localhost:5000
+3.  **Instalar dependencias**:
+    ```bash
+    pip install -r requirements.txt
     ```
-    *Nota: En producción, esta URL debe apuntar a tu backend desplegado en Render.*
+    *Principales dependencias:* `Flask`, `flask-cors`, `google-generativeai`, `python-dotenv`, `gunicorn`.
+
+4.  **Variables de Entorno**:
+    Crea un archivo `.env` en la raíz de la carpeta `backend` y añade tu API Key de Google:
+    ```env
+    GOOGLE_API_KEY=tu_api_key_aqui
+    PORT=5000
+    ```
 
 ## ▶️ Ejecución Local
 
+Para desarrollo:
 ```bash
-npm run dev
+python main.py
 ```
-La aplicación estará disponible en `http://localhost:5173`.
+El servidor correrá en `http://localhost:5000`.
 
-## ☁️ Despliegue en Vercel
+Para producción (local):
+```bash
+gunicorn main:app
+```
+
+## ☁️ Despliegue en Render
+
+Este proyecto incluye un archivo `render.yaml` en la raíz del repositorio para facilitar el despliegue.
 
 1.  Sube tu código a GitHub.
-2.  En Vercel, crea un **Nuevo Proyecto** e importa tu repositorio.
-3.  Configura el **Root Directory** a `frontend`.
-4.  En **Environment Variables**, añade:
-    *   `VITE_BACKEND_URL`: La URL de tu backend en Render (ej: `https://gemini-backend-xxxx.onrender.com`).
-5.  Haz clic en **Deploy**.
+2.  En Render, crea un nuevo **Blueprint**.
+3.  Conecta tu repositorio.
+4.  Render detectará la configuración.
+5.  Proporciona tu `GOOGLE_API_KEY` cuando se te solicite.
 
-## 📂 Estructura del Proyecto
+El servicio se desplegará como un **Web Service** con Python.
 
-*   `src/components`: Componentes de React (Chatbot, Navbar, etc.).
-*   `src/services`: Lógica de comunicación con la API (`geminiService.ts`).
-*   `src/types.ts`: Definiciones de tipos TypeScript.
-*   `vercel.json`: Configuración para el enrutamiento en Vercel (SPA).
+## 📡 Endpoints
+
+### `POST /api/chat`
+
+Envía un mensaje al chatbot.
+
+**Body (JSON):**
+```json
+{
+  "message": "Recomiéndame playas en Santa Marta"
+}
+```
+
+**Ejemplo con cURL:**
+```bash
+curl -X POST http://localhost:5000/api/chat \
+     -H "Content-Type: application/json" \
+     -d '{"message": "Recomiéndame playas en Santa Marta"}'
+```
+
+**Respuesta (JSON):**
+```json
+{
+  "response": "¡Claro! Te recomiendo visitar el Parque Tayrona...",
+  "placesInfo": [
+    { "name": "Parque Tayrona", "city": "Santa Marta", "department": "Magdalena" },
+    { "name": "Playa Blanca", "city": "Santa Marta", "department": "Magdalena" }
+  ]
+}
+```
+
+## ❓ Solución de Problemas
+
+*   **Error 500 al enviar mensaje**: Verifica que tu `GOOGLE_API_KEY` en el archivo `.env` sea correcta y tenga permisos activos.
+*   **CORS Error**: Asegúrate de que estás accediendo desde el frontend permitido o que `CORS(app)` está habilitado en `main.py`.
+*   **Gemini no responde**: Revisa tu conexión a internet y que la API de Google no esté caída.
